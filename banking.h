@@ -1,35 +1,15 @@
-#include <iostream>
 #include <vector>
 #include "RTree.h"
 #include "def.h"
 #include <string>
-typedef RTree<int, double, 2> MyTree;
-// class Rectangle {
-// public:
-//     int id;
-//     float x, y, width, height;
-
-//     Rectangle(int id, float x, float y, float width, float height)
-//         : id(id), x(x), y(y), width(width), height(height) {}
-
-//     // 返回矩形的邊界框
-//     float* getBounds() {
-//         static float bounds[4];
-//         bounds[0] = x;
-//         bounds[1] = y;
-//         bounds[2] = x + width;
-//         bounds[3] = y + height;
-//         return bounds;
-//     }
-// };
-
+typedef RTree<int, double, 2> rtree;
 
 
 class FFBanking {
 public:
     //Constructor
     FFBanking(Circuit circuit) {
-        
+        // circuit = x;
         rtree ctree;
         for (int i=0; i<circuit.FF_instances.size(); i++){
             // insert all flipflops to ctree
@@ -50,82 +30,68 @@ public:
             if (circuit.flipflops[i].id > max_bit) max_bit = circuit.flipflops[i].id;
         }
 
+
+
     }
-
-
-    // void insertRectangle(int id, float x, float y, float width, float height) {
-    //     Rectangle rect(id, x, y, width, height);
-    //     rectangles.push_back(rect);
-    //     rtree.Insert(rect.getBounds(), id);
-    // }
 
     
     // Find all neightbors of all flipflops
-    std::vector<int> findAdjacentRectangles(Instance flipflop, float epsilon = 2000) {
-        neighbors.clear();
-        count = 0;
+    std::vector<int> findAdjacentFF(Instance flipflop, float epsilon = 2000) {
+        // neighbors.clear();
+        neighbors_id.clear();
+        count_neighbor = 0;
         float query_MinBounds[2] = {flipflop.x - epsilon, flipflop.y - epsilon}
         float query_MaxBounds[2] = {flipflop.x + flipflop.width + epsilon, flipflop.y + flipflop.height + epsilon};
-        rtree.Search(query_MinBounds[2], query_MaxBounds[2],  [](Instance const& target){
+        ctree.Search(query_MinBounds[2], query_MaxBounds[2],  [](Instance const& target){
             return MySearchCallback(const_cast<Instance&>(target));
         });
 
-
-
-        // ChatGPT ?????????????????
-        // std::vector<int> adjacent_rects;
-        // for (int rect_id : potential_neighbors) {
-        //     if (isAdjacent(x, y, width, height, rectangles[rect_id], epsilon)) {
-        //         adjacent_rects.push_back(rect_id);
-        //     }
-        // }
-        // return adjacent_rects;
+        
+        for (int i=0; i<neighbors_id.size(), i++){
+            neighbors_id.push(neighbors[i].id);
+        }
+        return neighbors_id;
     }
 
-private:
+    void findAllAdjacentFF(std::vector<Instance> ff_list){
+        int index = 0;
+        while(!ff_list.empty()){
+            std::vector<int> neighbors_id_return;
+            neighbors_id_return = findAdjacentFF(ff_list[index]);
+            //
+            for (int i=0; i<neighbors_id_return.size(); i++){
+                std::vector<Instance>::iterator itor = ff_list.begin();
+                while (itor != ff_list.end()){
+                    if (*itor.id == neighbors_id_return[i]){
+                        itor = ff_list.erase(itor);
+                        break;
+                    } 
+                    else itor++;
+                }
+            }
+            ff_list.erase(ff_list.begin()+index);
 
-    // static bool searchCallback(int id, void* arg) {
-    //     std::vector<int>* results = static_cast<std::vector<int>*>(arg);
-    //     results->push_back(id);
-    //     return true; // keep going
-    // }
+
+
+            index++;
+        }
+    }
+
+    std::vector<Instance> resultFF;
+
+
+
+private:
+    // Circuit circuit;
     int count_neighbor;
     int max_bit;
-    std::vector<Instance> neighbors;
+    // std::vector<Instance> neighbors;
+    std::vector<int> neighbors_id;
 
     static bool MySearchCallback(Instance& target) {
         count_neighbor++;
-        neighbors.push(target);
+        neighbors_id.push(target.id);
         if (count_neighbor >= max_bit) return false;
+        else return true;
     }
-
-    // bool isAdjacent(float x, float y, float width, float height, const Rectangle& rect, float epsilon) {
-    //     return ((std::abs(rect.x - (x + width)) <= epsilon || std::abs(x - (rect.x + rect.width)) <= epsilon) &&
-    //             (rect.y < y + height && rect.y + rect.height > y)) ||
-    //            ((std::abs(rect.y - (y + height)) <= epsilon || std::abs(y - (rect.y + rect.height)) <= epsilon) &&
-    //             (rect.x < x + width && rect.x + rect.width > x));
-    // }
-
-    // std::vector<Rectangle> rectangles;
-    // RTree<int, float, 4> rtree;
 };
-
-// int main() {
-//     FFBanking rtree;
-
-//     // 插入矩形到 R-tree 中
-//     rtree.insertRectangle(0, 0.0, 0.0, 1.0, 1.0);
-//     rtree.insertRectangle(1, 2.0, 0.0, 1.0, 1.0);
-//     rtree.insertRectangle(2, 0.0, 2.0, 1.0, 1.0);
-//     rtree.insertRectangle(3, 2.0, 2.0, 1.0, 1.0);
-
-//     // 查詢範例：查找與矩形 (1.0, 1.0, 1.0, 1.0) 相鄰的所有矩形
-//     std::vector<int> adjacent_rects = rtree.findAdjacentRectangles(1.0, 1.0, 1.0, 1.0);
-//     std::cout << "相鄰的矩形: ";
-//     for (int rect_id : adjacent_rects) {
-//         std::cout << rect_id << " ";
-//     }
-//     std::cout << std::endl;
-
-//     return 0;
-// }
