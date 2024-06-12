@@ -74,7 +74,14 @@ void readFile(const std::string& filename, Circuit& circuit) {
             std::string name, type;
             double x, y;
             iss >> name >> type >> x >> y;
-            if ( strncmp(type, "G", 1) != 0 ) circuit.addInstance(Instance(name, type, x, y));
+            circuit.addInstance(Instance(name, type, x, y));
+            bool is_gate = false;
+            for (int i=0; i<circuit.gates.size(); i++){
+                if (circuit.gates[i].name == type) is_gate = true;
+            }
+            if (!is_gate) {
+                circuit.addFFInstance(Instance(name, type, x, y));
+            }
         } else if (keyword == "Net") {
             std::string name;
             int numPins;

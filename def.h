@@ -55,6 +55,8 @@ public:
     std::string name;
     std::string type;
     double x, y;
+    double width, height;
+    int id;
 
     Instance(const std::string& name, const std::string& type, double x, double y)
         : name(name), type(type), x(x), y(y) {}
@@ -91,6 +93,7 @@ public:
     std::vector<Pin> outputs;
     std::vector<FlipFlop> flipFlops;
     std::vector<Gate> gates;
+    std::vector<Instance> FF_instances;
     std::vector<Instance> instances;
     std::vector<placementRows> p_row;
     std::vector<Net> nets;
@@ -121,6 +124,10 @@ public:
 
     void addInstance(const Instance& instance) {
         instances.push_back(instance);
+    }
+
+    void addFFInstance(const Instance& instance) {
+        FF_instances.push_back(instance);
     }
 
     void addInput(const Pin& input) {
