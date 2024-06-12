@@ -33,6 +33,8 @@ public:
     //     rtree.Insert(rect.getBounds(), id);
     // }
 
+    
+
     std::vector<int> findAdjacentRectangles(float x, float y, float width, float height, float epsilon = 2000) {
         float query_MinBounds[2] = {x - epsilon, y - epsilon}
         float query_MinBounds[2] = {x + width + epsilon, y + height + epsilon};
