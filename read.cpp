@@ -74,7 +74,7 @@ void readFile(const std::string& filename, Circuit& circuit) {
             std::string name, type;
             double x, y;
             iss >> name >> type >> x >> y;
-            circuit.addInstance(Instance(name, type, x, y));
+            if (!strncmp(type, "G", 1)) circuit.addInstance(Instance(name, type, x, y));
         } else if (keyword == "Net") {
             std::string name;
             int numPins;

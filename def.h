@@ -22,9 +22,9 @@ public:
 // Define a class for FlipFlops
 class FlipFlop {
 public:
-    int id;
+    int id;//id = bits
     std::string name;
-    double x, y;
+    double x, y; //x=width, y=height
     std::vector<Pin> pins;
     
 
