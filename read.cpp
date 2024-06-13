@@ -45,38 +45,61 @@ void readFile(const std::string& filename, Circuit& circuit) {
             double x, y;
             int numPins;
             iss >> id >> name >> x >> y >> numPins;
-            FlipFlop flipFlop(id, name, x, y);
+            
+            FlipFlop* FF = new FlipFlop(id, name, x, y);
             for (int i = 0; i < numPins; ++i) {
                 std::getline(inFile, line);
                 std::istringstream pinStream(line);
                 std::string pinKeyword, pinName;
                 double pinX, pinY;
                 pinStream >> pinKeyword >> pinName >> pinX >> pinY;
-                flipFlop.addPin(Pin(pinName, pinX, pinY));
+                FF->addPin(Pin(pinName, pinX, pinY));
             }
-            circuit.addFlipFlop(flipFlop);
+            circuit.addFlipFlop(name,FF);
         } else if (keyword == "Gate") {
             std::string name;
             double x, y;
             int numPins;
             iss >> name >> x >> y >> numPins;
-            Gate gate(name, x, y);
+            Gate* g = new Gate(name, x, y);
             for (int i = 0; i < numPins; ++i) {
                 std::getline(inFile, line);
                 std::istringstream pinStream(line);
                 std::string pinKeyword, pinName;
                 double pinX, pinY;
                 pinStream >> pinKeyword >> pinName >> pinX >> pinY;
-                gate.addPin(Pin(pinName, pinX, pinY));
+                g->addPin(Pin(pinName, pinX, pinY));
             }
-            circuit.addGate(gate);
+            circuit.addGate(name,g);
         } else if (keyword == "Inst") {
             std::string name, type;
+        
             double x, y;
             iss >> name >> type >> x >> y;
-            circuit.addInstance(Instance(name, type, x, y));
-            
-            if (strncmp(type, "G", 1) != 0) circuit.addFFInstance(Instance(name, type, x, y));
+          
+             if (type[0] !='G')
+             {
+                Instance _FF = Instance(name, type, x, y);
+
+                _FF.is_FF = 1;
+                //FF.id = circuit.FF_instances.size();
+                _FF.FF = circuit.getFF(name);
+
+                circuit.addInstance(_FF);
+                circuit.addFFInstance(_FF);
+             }
+             else
+             {
+                Instance _gate =  Instance(name, type, x, y);
+
+                _gate.is_FF = 0;
+                //_gate.id = circuit.instances.size();
+                _gate.gate = circuit.getGate(name);
+
+                circuit.addInstance(_gate);
+                 
+             }
+           
         } else if (keyword == "Net") {
             std::string name;
             int numPins;

@@ -9,6 +9,8 @@
 #include <unordered_map>
 #include <string>
 #include <map>
+#include <cstring>
+
 
 // Define a class for Pins
 class Pin {
@@ -26,7 +28,7 @@ public:
     std::string name;
     double x, y; //x=width, y=height
     std::vector<Pin> pins;
-    
+    FlipFlop(){}
 
     FlipFlop(int id, const std::string& name, double x, double y) : id(id), name(name), x(x), y(y) {}
 
@@ -41,7 +43,7 @@ public:
     std::string name;
     double x, y;
     std::vector<Pin> pins;
-
+    Gate(){}
     Gate(const std::string& name, double x, double y) : name(name), x(x), y(y) {}
 
     void addPin(const Pin& pin) {
@@ -54,12 +56,17 @@ class Instance {
 public:
     std::string name;
     std::string type;
+    int is_FF; //1:FF 0:Gate
+    FlipFlop FF;
+    Gate gate; 
     double x, y;
     double width, height;
     int id;
 
     Instance(const std::string& name, const std::string& type, double x, double y)
-        : name(name), type(type), x(x), y(y) {}
+        : name(name), type(type), x(x), y(y) { 
+          
+        }
 };
 
 // Define a class for Nets
@@ -91,8 +98,11 @@ public:
     double dieSize[4];
     std::vector<Pin> inputs;
     std::vector<Pin> outputs;
-    std::vector<FlipFlop> flipFlops;
-    std::vector<Gate> gates;
+
+    //mapped by name
+    //std::vector<FlipFlop> flipFlops;
+    std::unordered_map<std::string, FlipFlop*> flipFlops;
+    std::unordered_map<std::string, Gate*> gates;
     std::vector<Instance> FF_instances;
     std::vector<Instance> instances;
     std::vector<placementRows> p_row;
@@ -102,12 +112,23 @@ public:
     std::unordered_map<std::string, double> timingSlacks;
     std::unordered_map<std::string, double> gatePowers;
 
-    void addFlipFlop(const FlipFlop& flipFlop) {
-        flipFlops.push_back(flipFlop);
+    void addFlipFlop(const std::string& name, FlipFlop* flipFlop) {
+        flipFlops[name] = flipFlop;
     }
+    FlipFlop getFF(const std::string& name)
+    {
+        FlipFlop* FF = flipFlops[name];
+        return *FF;
+    }
+  
 
-    void addGate(const Gate& gate) {
-        gates.push_back(gate);
+    void addGate(const std::string& name, Gate* gate) {
+        gates[name] = gate;
+    }
+    Gate getGate(const std::string& name)
+    {
+        Gate* g = gates[name];
+        return *g;
     }
 
     void addNet(const Net& net) {
