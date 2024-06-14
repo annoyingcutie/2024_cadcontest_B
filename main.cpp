@@ -1,13 +1,15 @@
 using namespace std;
 #include "read.h"
 #include "def.h"
+#include "param.h"
 
 int main(int argc, char* argv[]) {
-    Circuit circuit;
+    Param param;
     std::string inputFilename = argv[1];
     std::string outputFilename = argv[2];
 
-    readFile(inputFilename, circuit);
+    readFile(inputFilename, param);
+    std::cout<<"finish Reading"<<std::endl;
 
 
     // Example new instances and mappings (these should be determined by your specific requirements)
@@ -28,7 +30,7 @@ int main(int argc, char* argv[]) {
         {"C3/Q", "C5/Q0"}
     };
     */
-    writeOutput(outputFilename, circuit.instances,  circuit.mappings);
+    //writeOutput(outputFilename, param._FFInstance,  param.mappings);
 
     return 0;
 };

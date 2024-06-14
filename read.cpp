@@ -1,5 +1,5 @@
 #include "read.h"
-void readFile(const std::string& filename, Circuit& circuit) {
+void readFile(const std::string& filename, Param& param) {
     std::ifstream inFile(filename);
 
     if (!inFile) {
@@ -16,62 +16,72 @@ void readFile(const std::string& filename, Circuit& circuit) {
         if (keyword == "Alpha" || keyword == "Beta" || keyword == "Gamma" || keyword == "Lambda" ||
             keyword == "BinWidth" || keyword == "BinHeight" || keyword == "BinMaxUtil" ||
             keyword == "DisplacementDelay") {
+             std::cout<<keyword<<std::endl;
             double value;
             iss >> value;
-            circuit.setParameter(keyword, value);
+            param.setParameter(keyword, value);
         } else if (keyword == "DieSize") {
+             std::cout<<keyword<<std::endl;
             double x, y, width, height;
             iss >> x >> y >> width >> height;
-            circuit.setDieSize(x, y, width, height);
+            param.setDieSize(x, y, width, height);
         } else if (keyword == "NumInput") {
+             std::cout<<keyword<<std::endl;
             int numInputs;
             iss >> numInputs;
         } else if (keyword == "Input") {
+            std::cout<<keyword<<std::endl;
             std::string name;
             double x, y;
             iss >> name >> x >> y;
-            circuit.addInput(Pin(name, x, y));
+            param.addInput(Pin(name, x, y));
         } else if (keyword == "NumOutput") {
+             std::cout<<keyword<<std::endl;
             int numOutputs;
             iss >> numOutputs;
         } else if (keyword == "Output") {
+            std::cout<<keyword<<std::endl;
             std::string name;
             double x, y;
             iss >> name >> x >> y;
-            circuit.addOutput(Pin(name, x, y));
+            param.addOutput(Pin(name, x, y));
         } else if (keyword == "FlipFlop") {
+            std::cout<<keyword<<std::endl;
             int id;
             std::string name;
             double x, y;
             int numPins;
             iss >> id >> name >> x >> y >> numPins;
-            
-            FlipFlop* FF = new FlipFlop(id, name, x, y);
+
+            FF FlipFlop = FF(id, name, x, y);
             for (int i = 0; i < numPins; ++i) {
                 std::getline(inFile, line);
                 std::istringstream pinStream(line);
                 std::string pinKeyword, pinName;
                 double pinX, pinY;
                 pinStream >> pinKeyword >> pinName >> pinX >> pinY;
-                FF->addPin(Pin(pinName, pinX, pinY));
+                
+                FlipFlop.addPin(pinName, pinX, pinY);
             }
-            circuit.addFlipFlop(name,FF);
+            param.add_FF_List(name, FlipFlop);
         } else if (keyword == "Gate") {
+            std::cout<<keyword<<std::endl;
             std::string name;
             double x, y;
             int numPins;
             iss >> name >> x >> y >> numPins;
-            Gate* g = new Gate(name, x, y);
+            Gate g = Gate(name, x, y);
             for (int i = 0; i < numPins; ++i) {
                 std::getline(inFile, line);
                 std::istringstream pinStream(line);
                 std::string pinKeyword, pinName;
                 double pinX, pinY;
                 pinStream >> pinKeyword >> pinName >> pinX >> pinY;
-                g->addPin(Pin(pinName, pinX, pinY));
+                g.addPin(pinName, pinX, pinY);
             }
-            circuit.addGate(name,g);
+            param.addGate(name,g);
         } else if (keyword == "Inst") {
+            std::cout<<keyword<<std::endl;
             std::string name, type;
         
             double x, y;
@@ -79,28 +89,25 @@ void readFile(const std::string& filename, Circuit& circuit) {
           
              if (type[0] !='G')
              {
-                Instance _FF = Instance(name, type, x, y);
-
-                _FF.is_FF = 1;
-                //FF.id = circuit.FF_instances.size();
-                _FF.FF = circuit.getFF(name);
-
-                circuit.addInstance(_FF);
-                circuit.addFFInstance(_FF);
+                int l = param.get_FF_id(type);
+                FF temp_FF = param.getFF(l); 
+                temp_FF.set_Iname(name);
+                temp_FF.set_orginCoor(x,y);
+                param.addFFInstance(temp_FF);
+               
              }
              else
              {
-                Instance _gate =  Instance(name, type, x, y);
-
-                _gate.is_FF = 0;
-                //_gate.id = circuit.instances.size();
-                _gate.gate = circuit.getGate(name);
-
-                circuit.addInstance(_gate);
+                int l = param.get_Gate_id(type);
+                Gate temp_gate = param.getGate(l);
+                temp_gate.set_Gate_name(name);
+                temp_gate.set_origin_coor(x,y);
+                param.addGateInstance(temp_gate);
                  
              }
            
         } else if (keyword == "Net") {
+            std::cout<<keyword<<std::endl;
             std::string name;
             int numPins;
             iss >> name >> numPins;
@@ -112,36 +119,45 @@ void readFile(const std::string& filename, Circuit& circuit) {
                 pinStream >> pinKeyword >> pinName;
                 net.addPin(pinName);
             }
-            circuit.addNet(net);
+            param.addNet(net);
         } else if (keyword == "QpinDelay"){
+            std::cout<<keyword<<std::endl;
             std::string name;
             double value;
             iss >> name >> value;
-            circuit.setQpinDelay(name, value);
+            param.setQpinDelay(name, value);
         } else if (keyword == "TimingSlack"){
+            std::cout<<keyword<<std::endl;
             std::string name, pin;
             double value;
             iss >> name >> pin >>value;
-            circuit.setTimingSlack(name, value);
+            param.setTimingSlack(name, value);
         } else if (keyword == "GatePower"){
+            std::cout<<keyword<<std::endl;
             std::string name;
             double value;
             iss >> name >> value;
-            circuit.setGatePowers(name, value);
+            param.setGatePowers(name, value);
         } else if (keyword == "PlacementRows"){
+            std::cout<<keyword<<std::endl;
             int number;
             double x1, y1, x2, y2;
             iss >> x1 >> y1 >> x2 >> y2 >> number;
             placementRows row(x1, y1, x2, y2, number);
-            circuit.setPlacementRows(row);
+            param.setPlacementRows(row);
         }
+        
+       
 
     }
+    std::cout<<"updating..."<<std::endl;
+    param.update_q_s();
 
     inFile.close();
 }
 
-void writeOutput(const std::string& filename, const std::vector<Instance>& newInstances, const std::map<std::string, std::vector<std::string>>& mappings) {
+/*
+void writeOutput(const std::string& filename, const std::vector<FF>& _FFs, const std::map<std::string, std::string>& mappings) {
     std::ofstream outFile(filename);
 
     if (!outFile) {
@@ -149,22 +165,18 @@ void writeOutput(const std::string& filename, const std::vector<Instance>& newIn
         return;
     }
 
-    outFile << "CellInst " << newInstances.size() << "\n";
-    for (const auto& instance : newInstances) {
-        outFile << "Inst " << instance.name << " " << instance.type << " " << instance.x << " " << instance.y << "\n";
+    outFile << "CellInst " << _FFs.size() << "\n";
+    for (const auto& instance : _FFs) {
+        outFile << "Inst " << instance.get_Inst_name() << " " << instance.get_type_name() << " " << instance.get_x_coor() << " " << instance.get_y_coor() << "\n";
     }
 
     for (const auto& mapping : mappings) {
-          std::string in = mapping.first;
-          std::vector<std::string> pins = mapping.second;
-          for (const auto& pin : pins)
-          {
-              outFile << in << " map " << pin << "\n";
-          }
-
-
+          std::string before = mapping.first;
+          std::string after = mapping.second;
+         outFile << before << " map " << after << "\n";
     }
 
     outFile.close();
 }
+*/
 

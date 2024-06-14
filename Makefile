@@ -8,13 +8,13 @@ CXXFLAGS = -Wall -g
 TARGET = RC
 
 # Source files
-SRCS = main.cpp read.cpp def.cpp
+SRCS = main.cpp read.cpp def.cpp FF.cpp param.cpp
 
 # Object files
 OBJS = $(SRCS:.cpp=.o)
 
 # Header files
-HEADERS = read.h def.h 
+HEADERS = read.h def.h FF.h param.h
 
 # Default rule
 all: $(TARGET)
