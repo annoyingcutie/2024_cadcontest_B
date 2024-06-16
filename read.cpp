@@ -145,6 +145,9 @@ void readFile(const std::string& filename, Param& param) {
             iss >> x1 >> y1 >> x2 >> y2 >> number;
             placementRows row(x1, y1, x2, y2, number);
             param.setPlacementRows(row);
+            /*
+            Initialize the 2D vector by the number
+            */
         }
         
        
@@ -152,8 +155,15 @@ void readFile(const std::string& filename, Param& param) {
     }
     std::cout<<"updating..."<<std::endl;
     param.update_q_s();
+    std::cout<<"Meanshifting..."<<std::endl;
+    param.doMeanShift();
+    param.printFFs();
+    std::cout<<"Finish Meanshifting..."<<std::endl;
 
     inFile.close();
+
+    
+
 }
 
 /*
