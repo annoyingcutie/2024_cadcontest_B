@@ -4,12 +4,15 @@ using namespace std;
 #include "param.h"
 
 int main(int argc, char* argv[]) {
-    Param param;
+    //Param param;
+    auto& param = getParam();
     std::string inputFilename = argv[1];
     std::string outputFilename = argv[2];
 
     readFile(inputFilename, param);
     std::cout<<"finish Reading"<<std::endl;
+
+   
 
 
     // Example new instances and mappings (these should be determined by your specific requirements)

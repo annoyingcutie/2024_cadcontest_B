@@ -10,9 +10,38 @@
 #include <string>
 #include <map>
 #include <cstring>
+#include <algorithm>
+#include <cmath>
+#include <cassert>
+
+#pragma GCC system_header
+#include <boost/geometry.hpp>
+#include <boost/geometry/geometries/point.hpp>
+#include <boost/geometry/index/rtree.hpp>
+#include <boost/foreach.hpp>
+#define P_PER_NODE 16
+
+namespace bg = boost::geometry;
+namespace bgi = boost::geometry::index;
+namespace bgm = boost::geometry::model;
+
 
 typedef std::pair<double,double> L_Coor;
+typedef std::pair<int , double> NeighborFF; //FF_ID,eDist
 typedef std::pair<double,double> W_H_;
+
+typedef bg::model::point<double, 2, bg::cs::cartesian> Point;
+typedef std::pair<Point, int> PointWithID; //with FF_ID
+typedef bgi::rtree< PointWithID, bgi::quadratic<P_PER_NODE> > RTree;
+double SE_Distance_ID(const L_Coor& p1, const PointWithID& p2);
+double MH_Distance_ID(const L_Coor& p1, const PointWithID& p2);
+
+
+double SE_Distance(const L_Coor& p1, const L_Coor& p2); //SquareEuclidean
+double MH_Distance(const L_Coor& p1, const L_Coor& p2); //Manhattan
+double Gaussian(const L_Coor& p1, const L_Coor& p2,const double bandwidth);
+
+
 // Define a class for Pins
 class Pin {
 public:

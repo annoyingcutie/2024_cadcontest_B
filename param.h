@@ -3,10 +3,17 @@
 
 #include "def.h"
 #include "FF.h"
+#include "MS.h"
 
 class Param{
 
 public:
+    Param()
+    {
+        SqrEpsilon = Epsilon * Epsilon;
+        SqrMaxDisp = MaxDisp * MaxDisp;
+        SqrMaxBandwidth = MaxBandwidth * MaxBandwidth;
+    }
 
      void add_FF_List(const std::string& name, FF& flipFlop) {
         int l = _FF_list.size();
@@ -59,6 +66,8 @@ public:
         _FF_Inst_map[s] = flipflop.get_FF_id();
         _FFInstance.push_back(flipflop);
     }
+    FF& get_inst_FF(int id) {return _FFInstance[id];}
+    int getFFSize()const  {return (int)_FFInstance.size(); }
 
     void addGateInstance(Gate& g) {
         int l = _gateInstance.size();
@@ -125,16 +134,48 @@ public:
             int temp_FF_tid = _FFInstance[i].get_FF_type_id(); //Get type ID
             
             FF temp_F = _FF_list[temp_FF_tid];
-            double p = temp_F.get_power();
-            double Q = temp_F.get_Qpin();
+            double p = temp_F.get_Power();
+            double Q = temp_F.get_QpinDelay();
             _FFInstance[i].set_Power(p);
             _FFInstance[i].set_QpinDelay(Q);
             
         }
     }
+    void printFFs()
+    {
+        for (int i = 0; i < _FFInstance.size(); i ++)
+        {
+            _FFInstance[i].print();
+        }
+    }
 
-    std::vector<FF> _FFInstance;
-    std::map<std::string, std::string> mappings;
+    static Param& getInstance()
+    {
+        static Param p;
+        return p;
+    }
+
+    void doMeanShift()
+    {
+        MS ms;
+        ms.run();
+    }
+
+    //some parameters
+    int M = 4;
+    int K  = 14;
+    int MaxClusterSize = 80;
+    int ThreadNum = 8;
+    double Tol = 0.0001;
+    double Epsilon = 5000;
+    double SqrEpsilon;
+    double MaxDisp = 3e+5;
+    double SqrMaxDisp;
+    double MaxBandwidth = 1e+5;
+    double SqrMaxBandwidth;
+
+
+    
 private:
     
     std::unordered_map<std::string, double> _costParameters;
@@ -156,8 +197,12 @@ private:
 
     std::vector<placementRows> p_row;
     std::vector<Net> nets;
+
+    std::vector<FF> _FFInstance;
+    std::map<std::string, std::string> mappings;
     
 };
 
+inline Param& getParam(){return Param::getInstance();}
 #endif
 
