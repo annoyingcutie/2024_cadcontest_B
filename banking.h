@@ -7,6 +7,7 @@ typedef RTree<int, double, 2> rtree;
 
 
 
+
 class FFBanking {
 public:
     //Constructor

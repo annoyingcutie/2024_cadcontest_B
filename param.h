@@ -184,7 +184,7 @@ private:
     std::vector<Pin> inputs;
     std::vector<Pin> outputs;
     int _FF_List_num = 0;
-    std::unordered_map<std::string, int> _FF_list_map;
+    std::unordered_map<std::string, int> _FF_list_map; 
     std::vector<FF> _FF_list;
 
     std::unordered_map<std::string, int> _FF_Inst_map;
@@ -200,7 +200,9 @@ private:
 
     std::vector<FF> _FFInstance;
     std::map<std::string, std::string> mappings;
-    
+    //instance_name/pin  instance_name/pin
+    //calculate timing slack before& after
+    //area, power
 };
 
 inline Param& getParam(){return Param::getInstance();}
