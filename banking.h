@@ -5,6 +5,12 @@
 typedef RTree<int, double, 2> rtree;
 
 
+//auto& m = getParam();
+//get _FFinstance
+//for each FF, create a box, use boxes to create r tree
+//set a bandwidth to search nearest boxes, and count their total bits and banking(check their clock source)
+//return mappings in param (m.setmappings())  mappings[instance name/pin] = new instance name/pin;
+
 class FFBanking {
 public:
     //Constructor

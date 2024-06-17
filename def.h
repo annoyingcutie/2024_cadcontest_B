@@ -33,6 +33,9 @@ typedef std::pair<double,double> W_H_;
 typedef bg::model::point<double, 2, bg::cs::cartesian> Point;
 typedef std::pair<Point, int> PointWithID; //with FF_ID
 typedef bgi::rtree< PointWithID, bgi::quadratic<P_PER_NODE> > RTree;
+
+//define rtree for box
+
 double SE_Distance_ID(const L_Coor& p1, const PointWithID& p2);
 double MH_Distance_ID(const L_Coor& p1, const PointWithID& p2);
 
@@ -114,6 +117,8 @@ public:
     void addPin(const std::string& pin) {
         connectedPins.push_back(pin);
     }
+
+    //calculate MH distance for two pins
 };
 
 class placementRows {

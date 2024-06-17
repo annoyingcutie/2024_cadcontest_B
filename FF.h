@@ -72,6 +72,9 @@ public:
     void sortNeighbors  ();
     void setBandWidth   ();
 
+    //void setClock();
+    //void setPin();
+
     double  doShifting (); //return eDist
 private:
     int _type_id;
@@ -93,6 +96,8 @@ private:
     bool _isShifting;
 
     std::vector<NeighborFF> _neighbors;
+
+    std::string clock; 
 
     
 
