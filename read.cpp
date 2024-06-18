@@ -126,8 +126,7 @@ void readFile(const std::string& filename, Param& param) {
                 else
                 {
                     
-                    
-                    
+    
                     std::string inst_name, inst_pin;
 
                     std::string sample = pinName;
@@ -137,12 +136,12 @@ void readFile(const std::string& filename, Param& param) {
                     {
                         inst_name = strs[0];
                         inst_pin = strs[1];
-                        std::cout << "setting clock" <<inst_name <<inst_pin <<std::endl;
+                        //std::cout << "setting clock" <<inst_name <<inst_pin <<std::endl;
                         if(inst_pin == "CLK" || inst_pin == "clk")
                     {
-                        std::cout << "setting clock" <<std::endl;
+                        //std::cout << "setting clock" <<std::endl;
                         param.set_clock_source(inst_name,source);
-                        std::cout << "setting clock finish" <<std::endl;
+                        //std::cout << "setting clock finish" <<std::endl;
                     }
 
                     }
