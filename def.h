@@ -35,6 +35,10 @@ typedef std::pair<Point, int> PointWithID; //with FF_ID
 typedef bgi::rtree< PointWithID, bgi::quadratic<P_PER_NODE> > RTree;
 
 //define rtree for box
+typedef bg::model::box<point> Box;
+typedef std::pair<Box, int> BoxWithID; //with FF_ID
+typedef bgi::rtree< BoxWithID, bgi::quadratic<P_PER_NODE> > BoxTree;
+
 
 double SE_Distance_ID(const L_Coor& p1, const PointWithID& p2);
 double MH_Distance_ID(const L_Coor& p1, const PointWithID& p2);
