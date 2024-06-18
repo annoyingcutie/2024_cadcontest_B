@@ -159,15 +159,3 @@ long long lcm(int a, int b)
 { 
     return (a / gcd(a, b)) * b; 
 }
-  return gcd(b, a % b); 
-} 
-  
-// Function to return LCM of two numbers  
-long long lcm(int a, int b) 
-{ 
-    return (a / gcd(a, b)) * b; 
-<<<<<<< HEAD
-}
-=======
-}
->>>>>>> 098fa0cfef0f7b2584c4833a7927fe8795735837
