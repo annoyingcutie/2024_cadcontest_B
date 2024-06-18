@@ -154,6 +154,15 @@ public:
         static Param p;
         return p;
     }
+    void set_clock_source(std::string inst_name, std::string source)
+    {
+        //int d = _FF_Inst_map[inst_name];
+        FF& ff = get_inst_FF(_FF_Inst_map[inst_name]);
+        ff.setClock(source);
+       // _FFInstance[d] = ff;
+
+    }
+    
 
     void doMeanShift()
     {

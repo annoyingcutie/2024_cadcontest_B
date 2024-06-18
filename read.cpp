@@ -1,4 +1,6 @@
 #include "read.h"
+#include <boost/algorithm/string.hpp>
+
 void readFile(const std::string& filename, Param& param) {
     std::ifstream inFile(filename);
 
@@ -112,14 +114,56 @@ void readFile(const std::string& filename, Param& param) {
             int numPins;
             iss >> name >> numPins;
             Net net(name);
+            std::string source;
             for (int i = 0; i < numPins; ++i) {
                 std::getline(inFile, line);
                 std::istringstream pinStream(line);
                 std::string pinKeyword, pinName;
                 pinStream >> pinKeyword >> pinName;
                 net.addPin(pinName);
+                
+                if(i == 0) { source = pinName;}
+                else
+                {
+                    
+                    
+                    
+                    std::string inst_name, inst_pin;
+
+                    std::string sample = pinName;
+                    std::vector<std::string> strs;
+                    boost::split(strs, sample, boost::is_any_of("/"));
+                    if(strs.size() == 2)
+                    {
+                        inst_name = strs[0];
+                        inst_pin = strs[1];
+                        std::cout << "setting clock" <<inst_name <<inst_pin <<std::endl;
+                        if(inst_pin == "CLK" || inst_pin == "clk")
+                    {
+                        std::cout << "setting clock" <<std::endl;
+                        param.set_clock_source(inst_name,source);
+                        std::cout << "setting clock finish" <<std::endl;
+                    }
+
+                    }
+
+                    
+                   
+        
+                   // std::istringstream nameStream(pinName);
+                   // std::getline(nameStream, inst_name, '/');
+                   // std::getline(nameStream, inst_pin, '/');
+
+                    
+                }
+
+
+               
             }
             param.addNet(net);
+
+           
+
         } else if (keyword == "QpinDelay"){
             std::cout<<keyword<<std::endl;
             std::string name;
