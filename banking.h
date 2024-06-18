@@ -38,7 +38,7 @@ public:
                 if ( cost < doc[circuit.flipFlops[i].id] \
                 || doc[circuit.flipFlops[i].id] == -1)
                 {
-                    bestFF_temp[circuit.flipFlops[i].id] = circuit.flipFlops[i]çš„id;
+                    bestFF_temp[circuit.flipFlops[i].id] = circuit.flipFlops[i]ªºid;
                     doc[circuit.flipFlops[i].id] = cost;
 
                 }
@@ -159,3 +159,15 @@ long long lcm(int a, int b)
 { 
     return (a / gcd(a, b)) * b; 
 }
+  return gcd(b, a % b); 
+} 
+  
+// Function to return LCM of two numbers  
+long long lcm(int a, int b) 
+{ 
+    return (a / gcd(a, b)) * b; 
+<<<<<<< HEAD
+}
+=======
+}
+>>>>>>> 098fa0cfef0f7b2584c4833a7927fe8795735837
