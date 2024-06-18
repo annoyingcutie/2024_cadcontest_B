@@ -162,10 +162,12 @@ void FFBanking::banking(){
                 c.addFFresult();
                 count_index ++;
                 nameCount ++;
+                int pinCount = 0;
                 for (int l=0; l<useList[j].getBits(); l++){
-                    mappings[neighbors[count_bit].get_Inst_name() +"/D"] = "Z"+to_string(nameCount)+"/D";
-                    mappings[neighbors[count_bit].get_Inst_name() +"/Q"] = "Z"+to_string(nameCount)+"/D";
+                    mappings[neighbors[count_bit].get_Inst_name() +"/D"] = "Z"+to_string(nameCount)+"/D"+to_string(pinCount);
+                    mappings[neighbors[count_bit].get_Inst_name() +"/Q"] = "Z"+to_string(nameCount)+"/D"+to_string(pinCount);
                     count_bit++;
+                    pinCount++;
                 }
             }
         }
