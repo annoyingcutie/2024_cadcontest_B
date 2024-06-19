@@ -4,6 +4,7 @@
 #include "def.h"
 #include "FF.h"
 #include "MS.h"
+#include "banking.h"
 
 class Param{
 
@@ -35,6 +36,7 @@ public:
         return _FF_list[Id];
     }
     int getFFListSize()const  {return (int)_FF_list.size(); }
+    std::vector<FF> getFFList() {return _FF_list;}
 
     void addGate(const std::string& name, Gate& gate) {
         int l = _Gate_list.size();
@@ -190,7 +192,7 @@ public:
     double SqrMaxBandwidth;
     int searchRange = 2000;
 
-
+    std::map<std::string, std::string> mappings;
     
 private:
     
@@ -216,7 +218,7 @@ private:
 
     std::vector<FF> _FFInstance;
     std::vector<FF> FFresult;
-    std::map<std::string, std::string> mappings;
+    //std::map<std::string, std::string> mappings;
     //instance_name/pin  instance_name/pin
     //calculate timing slack before& after
     //area, power

@@ -1,7 +1,27 @@
 #include "banking.h"
+#include "param.h"
+
+long long gcd(long long int a, long long int b) 
+{ 
+  if (b == 0) 
+    return a; 
+  return gcd(b, a % b); 
+} 
+  
+// Function to return LCM of two numbers  
+long long lcm(int a, int b) 
+{ 
+    return (a / gcd(a, b)) * b; 
+}
 
 
-FFBanking::FFBanking(){}
+FFBanking::FFBanking()
+{
+    auto& c = getParam();
+    useList = c.getFFList();
+    std::vector<std::vector<int>> DP(useList.size() + 1, std::vector<int>(bitsLCM + 1, INT_MAX));
+    dp = DP;
+}
 
 void FFBanking::run()
 {
@@ -83,7 +103,7 @@ void FFBanking::buildTable(){
     for (int i=0; i<=useList.size(); i++){
         for (int j=0; j<=bitsLCM; j++){
             for (int k=0; k<useList.size(); k++){
-                FF_count[i][j][useList.get_FF_type_id()] = 0;
+                FF_count[i][j][useList[k].get_FF_type_id()] = 0;
             }
             
         }
@@ -94,7 +114,7 @@ void FFBanking::buildTable(){
         for (int j = 1; j <= bitsLCM; ++j) {
             // 不選擇第i種flip-flop
             dp[i][j] = dp[i-1][j];
-            FF_count[i][j] = FF_count[i-1][j]
+            FF_count[i][j] = FF_count[i-1][j];
 
             int tempCost = dp[i][j - bits[i-1]] + costs[i-1];
             if (tempCost < dp[i][j]) {
@@ -127,7 +147,7 @@ void FFBanking::banking(){
         neighbors.clear();
         B.query(bgi::intersects(queryBox), std::back_inserter(box_neighbors));
         for (int j=0; j<box_neighbors.size(); j++){ // erase flipflops that are found to avoid re-merge
-            if (int k=0; k<TBmerge.size(); k++){
+            for (int k=0; k<TBmerge.size(); k++){
                 if (box_neighbors[j].second == TBmerge[k].get_FF_id()) { // if their instance id are the same, erase
                     neighbors.push_back(TBmerge[k]);
                     TBmerge.erase(TBmerge.begin() + k);
@@ -158,14 +178,15 @@ void FFBanking::banking(){
                 double x = neighbors[count_index].getX();
                 double y = neighbors[count_index].getY();
                 
-                FF ff(useList[j].getBits(), ("Z"+to_string(nameCount)), x , y);
-                c.addFFresult();
+                FF ff(useList[j].getBits(), ("Z"+std::to_string(nameCount)), x , y);
+                c.addFFresult(ff);
                 count_index ++;
                 nameCount ++;
                 int pinCount = 0;
+            
                 for (int l=0; l<useList[j].getBits(); l++){
-                    mappings[neighbors[count_bit].get_Inst_name() +"/D"] = "Z"+to_string(nameCount)+"/D"+to_string(pinCount);
-                    mappings[neighbors[count_bit].get_Inst_name() +"/Q"] = "Z"+to_string(nameCount)+"/D"+to_string(pinCount);
+                    c.mappings[neighbors[count_bit].get_Inst_name() +"/D"] = "Z"+std::to_string(nameCount)+"/D"+std::to_string(pinCount);
+                    c.mappings[neighbors[count_bit].get_Inst_name() +"/Q"] = "Z"+std::to_string(nameCount)+"/D"+std::to_string(pinCount);
                     count_bit++;
                     pinCount++;
                 }
@@ -178,11 +199,13 @@ void FFBanking::banking(){
 
 
 
-double FFBanking::calPACost(FF& ff){
+double FFBanking::calPACost(FF ff){
     auto& c = getParam();
     double cost;
     double area = ff.getW() * ff.getH();
     cost = c.getParameter("Beta")* ff.get_Power() + c.getParameter("Gamma")* area;
     return cost;
 }
+
+
 

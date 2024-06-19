@@ -2,9 +2,7 @@
 #define _READ_H_
 
 #include "def.h"
-#include "FF.h"
 #include "param.h"
-#include "MS.h"
 
 
 void readFile(const std::string& filename, Param& param);

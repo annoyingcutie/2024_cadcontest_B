@@ -35,7 +35,7 @@ typedef std::pair<Point, int> PointWithID; //with FF_ID
 typedef bgi::rtree< PointWithID, bgi::quadratic<P_PER_NODE> > RTree;
 
 //define rtree for box
-typedef bg::model::box<point> Box;
+typedef bg::model::box<Point> Box;
 typedef std::pair<Box, int> BoxWithID; //with FF_ID
 typedef bgi::rtree< BoxWithID, bgi::quadratic<P_PER_NODE> > BoxTree;
 
@@ -47,6 +47,8 @@ double MH_Distance_ID(const L_Coor& p1, const PointWithID& p2);
 double SE_Distance(const L_Coor& p1, const L_Coor& p2); //SquareEuclidean
 double MH_Distance(const L_Coor& p1, const L_Coor& p2); //Manhattan
 double Gaussian(const L_Coor& p1, const L_Coor& p2,const double bandwidth);
+
+
 
 
 // Define a class for Pins
