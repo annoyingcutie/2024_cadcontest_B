@@ -12,6 +12,13 @@ int main(int argc, char* argv[]) {
     readFile(inputFilename, param);
     std::cout<<"finish Reading"<<std::endl;
 
+    std::cout<<"Meanshifting..."<<std::endl;
+    param.doMeanShift();
+    param.printFFs();
+    std::cout<<"Finish Meanshifting..."<<std::endl;
+
+    param.doBanking();
+
    
 
 

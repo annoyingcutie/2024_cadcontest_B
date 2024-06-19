@@ -18,17 +18,32 @@ long long lcm(int a, int b)
 FFBanking::FFBanking()
 {
     auto& c = getParam();
-    useList = c.getFFList();
+    //useList = c.getFFList();
+    selectFF();
+    std::cout<<"Finish selectFF()..." << std::endl;
+    printUseList();
+    //bitsLCM = lcm( useList[0].getBits(), useList[1].getBits() );
+    //for (int i=2; i<useList.size(); i++) bitsLCM = lcm(bitsLCM, useList[i].getBits());
+    
     std::vector<std::vector<int>> DP(useList.size() + 1, std::vector<int>(bitsLCM + 1, INT_MAX));
     dp = DP;
 }
+void FFBanking::printUseList()
+{
+    for(int i = 0; i < useList.size(); i++)
+    {
+        useList[i].print();
+    }
+}
+
+
 
 void FFBanking::run()
 {
     buildTree();
     std::cout<<"Finish buildTree()..." << std::endl;
-    selectFF();
-    std::cout<<"Finish selectFF()..." << std::endl;
+    //selectFF();
+    //std::cout<<"Finish selectFF()..." << std::endl;
     buildTable();
     std::cout<<"Finish buildTable()..." << std::endl;
     banking();
@@ -55,6 +70,35 @@ void FFBanking::selectFF(){
 
     // Select only one ff from each number of bits
     auto& c = getParam();
+    FF min_cost_FF = c.getFF(0);
+    for (int i=1; i<c.getFFListSize(); i++){
+        if(c.getFF(i).getBits() == min_cost_FF.getBits())
+        {
+            if(calPACost(c.getFF(i)) < calPACost(min_cost_FF))
+            {
+                min_cost_FF = c.getFF(i);
+            }
+
+            if(i == c.getFFListSize()-1)
+            {
+                useList.push_back(min_cost_FF);
+            }
+        }
+        else
+        {
+            useList.push_back(min_cost_FF);
+            min_cost_FF = c.getFF(i);
+
+            //std::cout<< "min_cost_FF now is "<<std::endl;
+            //min_cost_FF.print();
+        }
+
+    }
+
+
+
+
+  /*
     bool exist;
     for (int i=0; i<c.getFFListSize(); i++){
         exist = false;
@@ -64,7 +108,7 @@ void FFBanking::selectFF(){
                 if ( calPACost(c.getFF(i)) < calPACost(useList[j]) ){
                     useList.erase(useList.begin() + j);
                     useList.push_back(c.getFF(i));
-                    break;
+                    //break;
                 }
             }
         }
@@ -72,16 +116,18 @@ void FFBanking::selectFF(){
             useList.push_back(c.getFF(i));
         }
     }
+    */
 }
 
 void FFBanking::buildTable(){
 
     // Calculating the lcm of number of bits
-    bitsLCM = lcm( useList[0].getBits(), useList[1].getBits() );
-    for (int i=2; i<useList.size(); i++) bitsLCM = lcm(bitsLCM, useList[i].getBits());
+    //bitsLCM = lcm( useList[0].getBits(), useList[1].getBits() );
+    //for (int i=2; i<useList.size(); i++) bitsLCM = lcm(bitsLCM, useList[i].getBits());
 
     
     // Sort
+    /*
     for (int i = useList.size()-1; i>=1; i--){
         for (int j=0; j<= (i-1); j++){
             if (useList[j].getBits() > useList[j+1].getBits()){
@@ -89,6 +135,7 @@ void FFBanking::buildTable(){
             }
         }
     }
+    */
 
     // DP
     std::vector<int> bits;

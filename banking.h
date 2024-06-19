@@ -22,6 +22,7 @@ public:
     void buildTable();
     void banking();
     void run();
+    void printUseList();
     
 
 
@@ -33,7 +34,7 @@ private:
     std::vector<  std::vector< std::unordered_map<int, int> >  > FF_count;
     //std::vector<std::vector<int>> dp(useList.size() + 1, std::vector<int>(bitsLCM + 1, INT_MAX));
     std::vector<std::vector<int>> dp;
-    int bitsLCM;
+    int bitsLCM = 4;
 
 
     double calPACost(FF ff);
