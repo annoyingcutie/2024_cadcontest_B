@@ -27,8 +27,7 @@ FFBanking::FFBanking()
     
     std::vector<std::vector<int>> DP(useList.size() + 1, std::vector<int>(bitsLCM + 1, INT_MAX));
     dp = DP;
-    std::vector<std::vector<unordered_map<int, int>>> FF_COUNT(bits.size() + 1, std::vector<std::unordered_map<int, int>>(bitsLCM + 1));
-    FF_count = FF_COUNT;
+    
 }
 void FFBanking::printUseList()
 {
@@ -124,8 +123,10 @@ void FFBanking::selectFF(){
 void FFBanking::buildTable(){
 
     // Calculating the lcm of number of bits
-    //bitsLCM = lcm( useList[0].getBits(), useList[1].getBits() );
-    //for (int i=2; i<useList.size(); i++) bitsLCM = lcm(bitsLCM, useList[i].getBits());
+    bitsLCM = lcm( useList[0].getBits(), useList[1].getBits() );
+    for (int i=2; i<useList.size(); i++) {
+        bitsLCM = lcm(bitsLCM, useList[i].getBits());
+    }
 
     
     // Sort
@@ -144,6 +145,9 @@ void FFBanking::buildTable(){
     for (int i=0; i<useList.size(); i++) bits.push_back(useList[i].getBits());
     std::vector<double> costs;
     for (int i=0; i<useList.size(); i++) costs.push_back(calPACost(useList[i]));
+
+    std::vector<std::vector<unordered_map<int, int>>> FF_COUNT(bits.size() + 1, std::vector<std::unordered_map<int, int>>(bitsLCM + 1));
+    FF_count = FF_COUNT;
 
     // DP table
     for (int i = 0; i <= useList.size(); ++i) {
