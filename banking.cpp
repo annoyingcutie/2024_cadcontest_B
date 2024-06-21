@@ -27,6 +27,8 @@ FFBanking::FFBanking()
     
     std::vector<std::vector<int>> DP(useList.size() + 1, std::vector<int>(bitsLCM + 1, INT_MAX));
     dp = DP;
+    std::vector<std::vector<unordered_map<int, int>>> FF_COUNT(bits.size() + 1, std::vector<std::unordered_map<int, int>>(bitsLCM + 1));
+    FF_count = FF_COUNT;
 }
 void FFBanking::printUseList()
 {
@@ -163,12 +165,15 @@ void FFBanking::buildTable(){
             dp[i][j] = dp[i-1][j];
             FF_count[i][j] = FF_count[i-1][j];
 
-            int tempCost = dp[i][j - bits[i-1]] + costs[i-1];
-            if (tempCost < dp[i][j]) {
-                dp[i][j] = tempCost;
-                FF_count[i][j] = FF_count[i][j - bits[i-1]];
-                FF_count[i][j][useList[i-1].get_FF_type_id()] += 1;  // 記錄選擇的flip-flop索引
+            if (j >= bits[i-1] && dp[i][j - bits[i-1]] != INT_MAX){
+                int tempCost = dp[i][j - bits[i-1]] + costs[i-1];
+                if (tempCost < dp[i][j]) {
+                    dp[i][j] = tempCost;
+                    FF_count[i][j] = FF_count[i][j - bits[i-1]];
+                    FF_count[i][j][useList[i-1].get_FF_type_id()] += 1;  // 記錄選擇的flip-flop索引
+                }
             }
+            
         }
     }
 }
@@ -193,11 +198,11 @@ void FFBanking::banking(){
         box_neighbors.clear(); 
         neighbors.clear();
         B.query(bgi::intersects(queryBox), std::back_inserter(box_neighbors));
-        for (int j=0; j<box_neighbors.size(); j++){ // erase flipflops that are found to avoid re-merge
+        for (int j=0; j<box_neighbors.size(); j++){ // erase flipflops that are found from to-be-merged list to avoid re-merge
             for (int k=0; k<TBmerge.size(); k++){
                 if (box_neighbors[j].second == TBmerge[k].get_FF_id()) { // if their instance id are the same, erase
-                    neighbors.push_back(TBmerge[k]);
-                    TBmerge.erase(TBmerge.begin() + k);
+                    neighbors.push_back(TBmerge[k]); // add to neighbor ff vector
+                    TBmerge.erase(TBmerge.begin() + k); 
                     break;
                 }
             }   
