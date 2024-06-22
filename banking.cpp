@@ -264,12 +264,16 @@ void FFBanking::banking(){
             for (int k=0; k<FF_total_count[useList[j].get_FF_type_id()]; k++){
                 
                 double x = neighbors[count_index].getX();
+               
                 double y = neighbors[count_index].getY();
+                std::cout << "x is " << x << std::endl;
+                std::cout << "y is " << y << std::endl;
                 
                // FF ff(useList[j].getBits(), ("Z"+std::to_string(nameCount)), x , y);
                 //ff.set_type_name(c.useList_map_type[useList[j].getBits()]);
-                FF ff(useList[j].getBits(),c.useList_map_type[useList[j].getBits()], x , y);
+                FF ff(useList[j].getBits(),c.useList_map_type[useList[j].getBits()], useList[j].getW() , useList[j].getH());
                 ff.set_Iname("Z"+std::to_string(nameCount));
+                ff.setCoor(x,y);
                 c.addFFresult(ff);
                 std::cout<< "add FF" <<std::endl;
                 count_index++;
