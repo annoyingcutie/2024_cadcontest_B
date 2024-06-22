@@ -239,13 +239,16 @@ void FFBanking::banking(){
                 count_index ++;
                 int pinCount = 0;
             
+                string add;
                 for (int l=0; l<useList[j].getBits(); l++){
-                    c.mappings[neighbors[count_bit].get_Inst_name() +"/D"] = "Z"+std::to_string(nameCount)+"/D"+std::to_string(pinCount);
-                    c.mappings[neighbors[count_bit].get_Inst_name() +"/Q"] = "Z"+std::to_string(nameCount)+"/D"+std::to_string(pinCount);
+                    if (useList[j].getBits() > 1) add = std::to_string(pinCount);
+                    else add.clear();
+                    c.mappings[neighbors[count_bit].get_Inst_name() +"/D"] = "Z"+std::to_string(nameCount)+"/D"+ add;
+                    c.mappings[neighbors[count_bit].get_Inst_name() +"/Q"] = "Z"+std::to_string(nameCount)+"/Q"+ add;
                     count_bit++;
                     pinCount++;
                 }
-                nameCount ++;
+                nameCount++;
             }
         }
         
