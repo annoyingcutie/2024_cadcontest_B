@@ -58,6 +58,7 @@ public:
 
     std::string get_Inst_name(){return Instance_name;}
     std::string get_type_name(){return name;}
+    void set_type_name(std::string s){ name = s;}
 
     bool isShifting()const {return _isShifting;}
     double getBandwidth()const {return _h;}

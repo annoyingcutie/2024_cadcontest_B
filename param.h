@@ -194,6 +194,7 @@ public:
 
     std::map<std::string, std::string> mappings;
     std::vector<FF> FFresult;
+    std::unordered_map<int,std::string> useList_map_type;
     
 private:
     
@@ -205,6 +206,8 @@ private:
     int _FF_List_num = 0;
     std::unordered_map<std::string, int> _FF_list_map;
     std::vector<FF> _FF_list;
+
+    
 
     std::unordered_map<std::string, int> _FF_Inst_map;
 

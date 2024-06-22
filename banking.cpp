@@ -83,12 +83,19 @@ void FFBanking::selectFF(){
             if(i == c.getFFListSize()-1)
             {
                 useList.push_back(min_cost_FF);
+                c.useList_map_type[min_cost_FF.getBits()] = min_cost_FF.get_type_name();
             }
         }
         else
         {
             useList.push_back(min_cost_FF);
+            c.useList_map_type[min_cost_FF.getBits()] = min_cost_FF.get_type_name();
             min_cost_FF = c.getFF(i);
+            if(i == c.getFFListSize()-1)
+            {
+                useList.push_back(min_cost_FF);
+                c.useList_map_type[min_cost_FF.getBits()] = min_cost_FF.get_type_name();
+            }
 
             //std::cout<< "min_cost_FF now is "<<std::endl;
             //min_cost_FF.print();
@@ -240,8 +247,9 @@ void FFBanking::banking(){
         index = bitsLCM;
         FF_total_count.clear();
         while(totalBits != 0){
-            totalBits = totalBits % index;
+            
             quotient = totalBits / index;
+            totalBits = totalBits % index;
             for (int j=0; j<useList.size(); j++){
                 FF_total_count[useList[j].get_FF_type_id()] += FF_count[useList.size()][index][useList[j].get_FF_type_id()] *quotient;
             }
@@ -250,6 +258,7 @@ void FFBanking::banking(){
         std::cout<<"FF_total_count "<<FF_total_count.size()<<std::endl;
         int count_index = 0;
         int count_bit = 0;
+
         for (int j=0; j<useList.size(); j++){
             std::cout<<"k is " << FF_total_count[useList[j].get_FF_type_id()] << std::endl;
             for (int k=0; k<FF_total_count[useList[j].get_FF_type_id()]; k++){
@@ -257,19 +266,26 @@ void FFBanking::banking(){
                 double x = neighbors[count_index].getX();
                 double y = neighbors[count_index].getY();
                 
-                FF ff(useList[j].getBits(), ("Z"+std::to_string(nameCount)), x , y);
+               // FF ff(useList[j].getBits(), ("Z"+std::to_string(nameCount)), x , y);
+                //ff.set_type_name(c.useList_map_type[useList[j].getBits()]);
+                FF ff(useList[j].getBits(),c.useList_map_type[useList[j].getBits()], x , y);
+                ff.set_Iname("Z"+std::to_string(nameCount));
                 c.addFFresult(ff);
                 std::cout<< "add FF" <<std::endl;
-                count_index ++;
-                nameCount ++;
+                count_index++;
+                
                 int pinCount = 0;
+                std::string add;
             
                 for (int l=0; l<useList[j].getBits(); l++){
-                    c.mappings[neighbors[count_bit].get_Inst_name() +"/D"] = "Z"+std::to_string(nameCount)+"/D"+std::to_string(pinCount);
-                    c.mappings[neighbors[count_bit].get_Inst_name() +"/Q"] = "Z"+std::to_string(nameCount)+"/D"+std::to_string(pinCount);
+                   if (useList[j].getBits() > 1) add = std::to_string(pinCount);
+                    else add.clear();
+                    c.mappings[neighbors[count_bit].get_Inst_name() +"/D"] = "Z"+std::to_string(nameCount)+"/D"+ add;
+                    c.mappings[neighbors[count_bit].get_Inst_name() +"/Q"] = "Z"+std::to_string(nameCount)+"/Q"+ add;
                     count_bit++;
                     pinCount++;
                 }
+                nameCount++;
             }
         }
 
