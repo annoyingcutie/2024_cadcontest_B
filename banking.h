@@ -16,6 +16,7 @@
 class FFBanking {
 public:
 
+
     FFBanking();
     void buildTree();
     void selectFF();
@@ -55,6 +56,7 @@ long long lcm(int a, int b)
 { 
     return (a / gcd(a, b)) * b; 
 }
+
 */
 
 #endif

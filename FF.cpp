@@ -11,6 +11,7 @@ void FF::print()
               << std::setw(10) << std::right << _QpinDelay
               << std::setw(10) << std::right << _TimingSlack
               << std::setw(10) << std::right << _Power
+              << std::setw(10) << std::right << _clock
               << std::endl;
 }
 
