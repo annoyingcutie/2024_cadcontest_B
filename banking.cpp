@@ -146,7 +146,7 @@ void FFBanking::buildTable(){
     std::vector<double> costs;
     for (int i=0; i<useList.size(); i++) costs.push_back(calPACost(useList[i]));
 
-    std::vector<std::vector<unordered_map<int, int>>> FF_COUNT(bits.size() + 1, std::vector<std::unordered_map<int, int>>(bitsLCM + 1));
+    std::vector<std::vector<std::unordered_map<int, int>>> FF_COUNT(bits.size() + 1, std::vector<std::unordered_map<int, int>>(bitsLCM + 1));
     FF_count = FF_COUNT;
 
     // DP table
@@ -220,11 +220,11 @@ void FFBanking::banking(){
         index = bitsLCM;
         FF_total_count.clear();
         while(totalBits != 0){
-            totalBits = totalBits % index;
             quotient = totalBits / index;
+            totalBits = totalBits % index;
             for (int j=0; j<useList.size(); j++){
                 FF_total_count[useList[j].get_FF_type_id()] += FF_count[useList.size()][index][useList[j].get_FF_type_id()] *quotient;
-            }
+            } // Finish accumulating all kinds of ff in the cluster
             index--;
         }
         int count_index = 0;
@@ -237,7 +237,6 @@ void FFBanking::banking(){
                 FF ff(useList[j].getBits(), ("Z"+std::to_string(nameCount)), x , y);
                 c.addFFresult(ff);
                 count_index ++;
-                nameCount ++;
                 int pinCount = 0;
             
                 for (int l=0; l<useList[j].getBits(); l++){
@@ -246,6 +245,7 @@ void FFBanking::banking(){
                     count_bit++;
                     pinCount++;
                 }
+                nameCount ++;
             }
         }
         
