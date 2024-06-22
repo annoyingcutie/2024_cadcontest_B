@@ -1,8 +1,8 @@
 CellInst 4
-Inst Z0 SVT_FF_1 3249.06 3823.33
-Inst Z1 SVT_FF_1 3249.06 3823.33
-Inst Z2 SVT_FF_1 3249.06 3823.33
-Inst Z3 SVT_FF_1 3249.06 3823.33
+Inst Z0 SVT_FF_1 0 0
+Inst Z1 SVT_FF_1 0 0
+Inst Z2 SVT_FF_1 0 0
+Inst Z3 SVT_FF_1 0 0
 reg1/D map Z0/D
 reg1/Q map Z0/Q
 reg2/D map Z1/D

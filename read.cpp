@@ -198,10 +198,7 @@ void readFile(const std::string& filename, Param& param) {
     }
     std::cout<<"updating..."<<std::endl;
     param.update_q_s();
-    std::cout<<"Meanshifting..."<<std::endl;
-    param.doMeanShift();
-    param.printFFs();
-    std::cout<<"Finish Meanshifting..."<<std::endl;
+    
 
     inFile.close();
 
@@ -209,8 +206,8 @@ void readFile(const std::string& filename, Param& param) {
 
 }
 
-/*
-void writeOutput(const std::string& filename, const std::vector<FF>& _FFs, const std::map<std::string, std::string>& mappings) {
+
+void writeOutput(const std::string& filename, std::vector<FF>& _FFs, std::map<std::string, std::string>& mappings) {
     std::ofstream outFile(filename);
 
     if (!outFile) {
@@ -219,8 +216,8 @@ void writeOutput(const std::string& filename, const std::vector<FF>& _FFs, const
     }
 
     outFile << "CellInst " << _FFs.size() << "\n";
-    for (const auto& instance : _FFs) {
-        outFile << "Inst " << instance.get_Inst_name() << " " << instance.get_type_name() << " " << instance.get_x_coor() << " " << instance.get_y_coor() << "\n";
+    for ( auto& instance : _FFs) {
+        outFile << "Inst " << instance.get_Inst_name() << " " << instance.get_type_name() << " " << instance.getX() << " " << instance.getY() << "\n";
     }
 
     for (const auto& mapping : mappings) {
@@ -231,5 +228,5 @@ void writeOutput(const std::string& filename, const std::vector<FF>& _FFs, const
 
     outFile.close();
 }
-*/
+
 

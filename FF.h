@@ -49,11 +49,16 @@ public:
     double getY()const {return _Coor.second;}
     double getOrigX()const{return _orginCoor.first;}
     double getOrigY()const{return _orginCoor.second;} 
+    double getW()const{return _w_h_.first;}
+    double getH()const{return _w_h_.second;}
     L_Coor& getCoor() {return _Coor;}
     L_Coor& getOrinCoor() {return _orginCoor;}
 
+    int getBits()const{return _bits;}
+
     std::string get_Inst_name(){return Instance_name;}
     std::string get_type_name(){return name;}
+    void set_type_name(std::string s){ name = s;}
 
     bool isShifting()const {return _isShifting;}
     double getBandwidth()const {return _h;}
