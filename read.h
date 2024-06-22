@@ -7,6 +7,6 @@
 
 void readFile(const std::string& filename, Param& param);
 
-//void writeOutput(const std::string& filename, const std::vector<FF>& _FFs, const std::map<std::string, std::string>& mappings);
+void writeOutput(const std::string& filename, std::vector<FF>& _FFs, std::map<std::string, std::string>& mappings);
 
 #endif

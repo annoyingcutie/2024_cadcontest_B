@@ -193,6 +193,7 @@ public:
     int searchRange = 2000;
 
     std::map<std::string, std::string> mappings;
+    std::vector<FF> FFresult;
     
 private:
     
@@ -217,7 +218,7 @@ private:
     std::vector<Net> nets;
 
     std::vector<FF> _FFInstance;
-    std::vector<FF> FFresult;
+    //std::vector<FF> FFresult;
     //std::map<std::string, std::string> mappings;
     //instance_name/pin  instance_name/pin
     //calculate timing slack before& after

@@ -40,7 +40,7 @@ int main(int argc, char* argv[]) {
         {"C3/Q", "C5/Q0"}
     };
     */
-    //writeOutput(outputFilename, param._FFInstance,  param.mappings);
+    writeOutput(outputFilename, param.FFresult,  param.mappings);
 
     return 0;
 };

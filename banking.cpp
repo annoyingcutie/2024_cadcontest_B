@@ -123,10 +123,14 @@ void FFBanking::selectFF(){
 void FFBanking::buildTable(){
 
     // Calculating the lcm of number of bits
+    /*
     bitsLCM = lcm( useList[0].getBits(), useList[1].getBits() );
     for (int i=2; i<useList.size(); i++) {
         bitsLCM = lcm(bitsLCM, useList[i].getBits());
     }
+    std::cout<<"LCM is"<<bitsLCM<<std::endl;
+    */
+    bitsLCM = 4;
 
     
     // Sort
@@ -143,16 +147,20 @@ void FFBanking::buildTable(){
     // DP
     std::vector<int> bits;
     for (int i=0; i<useList.size(); i++) bits.push_back(useList[i].getBits());
+    std::cout << "Finish initializing the bits table " << std::endl;
     std::vector<double> costs;
     for (int i=0; i<useList.size(); i++) costs.push_back(calPACost(useList[i]));
+    std::cout << "Finish initializing the costs table " << std::endl;
 
-    std::vector<std::vector<unordered_map<int, int>>> FF_COUNT(bits.size() + 1, std::vector<std::unordered_map<int, int>>(bitsLCM + 1));
+    std::vector<std::vector<std::unordered_map<int, int>>> FF_COUNT(bits.size() + 1, std::vector<std::unordered_map<int, int>>(bitsLCM + 1));
     FF_count = FF_COUNT;
+    std::cout << "Finish initializing the FF_count table " << std::endl;
 
     // DP table
     for (int i = 0; i <= useList.size(); ++i) {
         dp[i][0] = 0;
     }
+    std::cout << "Finish initializing the DP table " << std::endl;
     for (int i=0; i<=useList.size(); i++){
         for (int j=0; j<=bitsLCM; j++){
             for (int k=0; k<useList.size(); k++){
@@ -161,6 +169,8 @@ void FFBanking::buildTable(){
             
         }
     }
+
+    std::cout << "Finish initializing the FF_count table " << std::endl;
 
     // 動態規劃求解最小cost
     for (int i = 1; i <= useList.size(); ++i) {
@@ -195,13 +205,17 @@ void FFBanking::banking(){
     int quotient;
     int nameCount = 0;
     std::unordered_map<int, int> FF_total_count; // < type id of ff, number of ff used >
-
+    std::cout<<"TBmerge "<<TBmerge.size()<<std::endl;
     for (int i=0; i<TBmerge.size(); i++){
         Box queryBox(  Point(TBmerge[i].getX() - c.searchRange, TBmerge[i].getY() - c.searchRange), \
         Point(TBmerge[i].getX() + c.searchRange, TBmerge[i].getY() + c.searchRange)  );
+        //std::cout<<"box_neighbors "<<box_neighbors.size()<<std::endl;
+        //std::cout<<"neighbors "<<neighbors.size()<<std::endl;
         box_neighbors.clear(); 
         neighbors.clear();
         B.query(bgi::intersects(queryBox), std::back_inserter(box_neighbors));
+        std::cout<<"box_neighbors "<<box_neighbors.size()<<std::endl;
+        std::cout<<"neighbors "<<neighbors.size()<<std::endl;
         for (int j=0; j<box_neighbors.size(); j++){ // erase flipflops that are found from to-be-merged list to avoid re-merge
             for (int k=0; k<TBmerge.size(); k++){
                 if (box_neighbors[j].second == TBmerge[k].get_FF_id()) { // if their instance id are the same, erase
@@ -211,11 +225,17 @@ void FFBanking::banking(){
                 }
             }   
         }
+        std::cout<<"After size "<<std::endl;
+        std::cout<<"TBmerge "<<TBmerge.size()<<std::endl;
+        std::cout<<"box_neighbors "<<box_neighbors.size()<<std::endl;
+        std::cout<<"neighbors "<<neighbors.size()<<std::endl;
 
         totalBits = 0; // Calculate total bits in the cluster
         for (int j=0; j<neighbors.size(); j++){
             totalBits += neighbors[j].getBits();
         }
+        std::cout<<"totalBits "<<totalBits<<std::endl;
+
         // Decide how to divide bits
         index = bitsLCM;
         FF_total_count.clear();
@@ -227,15 +247,19 @@ void FFBanking::banking(){
             }
             index--;
         }
+        std::cout<<"FF_total_count "<<FF_total_count.size()<<std::endl;
         int count_index = 0;
         int count_bit = 0;
         for (int j=0; j<useList.size(); j++){
+            std::cout<<"k is " << FF_total_count[useList[j].get_FF_type_id()] << std::endl;
             for (int k=0; k<FF_total_count[useList[j].get_FF_type_id()]; k++){
+                
                 double x = neighbors[count_index].getX();
                 double y = neighbors[count_index].getY();
                 
                 FF ff(useList[j].getBits(), ("Z"+std::to_string(nameCount)), x , y);
                 c.addFFresult(ff);
+                std::cout<< "add FF" <<std::endl;
                 count_index ++;
                 nameCount ++;
                 int pinCount = 0;
@@ -248,6 +272,8 @@ void FFBanking::banking(){
                 }
             }
         }
+
+        
         
 
     }
