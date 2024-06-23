@@ -22,8 +22,10 @@ public:
     void selectFF();
     void buildTable();
     void banking();
+    void calTotalCost();
     void run();
     void printUseList();
+    
 
     
 
@@ -37,6 +39,7 @@ private:
     //std::vector<std::vector<int>> dp(useList.size() + 1, std::vector<int>(bitsLCM + 1, INT_MAX));
     std::vector<std::vector<int>> dp;
     int bitsLCM = 4;
+    double totalCost;
 
 
     double calPACost(FF ff);

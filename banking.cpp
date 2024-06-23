@@ -49,6 +49,8 @@ void FFBanking::run()
     std::cout<<"Finish buildTable()..." << std::endl;
     banking();
     std::cout<<"Finish banking()..." << std::endl;
+    calTotalCost();
+    std::cout<<"Finish calTotalCost()..." << std::endl;
 }
 
 
@@ -299,9 +301,17 @@ void FFBanking::banking(){
     }
 }
 
+void FFBanking::calTotalCost(){
+    auto& c = getParam();
+    for (int i=0; i<c.FFresult.size(); i++){
+        totalCost += calPACost(FFresult[i]);
+    }
+    std::cout << "The final total cost of flip-flops in the circuit is " << totalCost << "." << std::endl;
+}
 
 
-double FFBanking::calPACost(FF ff){
+
+double FFBanking::calPACost(FF& ff){
     auto& c = getParam();
     double cost;
     double area = ff.getW() * ff.getH();
