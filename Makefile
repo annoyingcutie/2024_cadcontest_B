@@ -1,5 +1,5 @@
 # Compiler
-CXX = g++ -std=c++11
+CXX = g++ -std=c++14
 
 # Compiler flags
 CXXFLAGS = -Wall -g
@@ -8,13 +8,15 @@ CXXFLAGS = -Wall -g
 TARGET = RC
 
 # Source files
-SRCS = main.cpp read.cpp def.cpp FF.cpp param.cpp
+SRCS = main.cpp read.cpp def.cpp FF.cpp MS.cpp param.cpp banking.cpp
 
 # Object files
 OBJS = $(SRCS:.cpp=.o)
 
 # Header files
-HEADERS = read.h def.h FF.h param.h
+
+HEADERS = read.h def.h FF.h  MS.h param.h banking.h
+
 
 # Default rule
 all: $(TARGET)

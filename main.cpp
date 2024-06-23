@@ -4,12 +4,22 @@ using namespace std;
 #include "param.h"
 
 int main(int argc, char* argv[]) {
-    Param param;
+    //Param param;
+    auto& param = getParam();
     std::string inputFilename = argv[1];
     std::string outputFilename = argv[2];
 
     readFile(inputFilename, param);
     std::cout<<"finish Reading"<<std::endl;
+
+    std::cout<<"Meanshifting..."<<std::endl;
+    param.doMeanShift();
+    // param.printFFs();
+    std::cout<<"Finish Meanshifting..."<<std::endl;
+
+    param.doBanking();
+
+   
 
 
     // Example new instances and mappings (these should be determined by your specific requirements)
@@ -30,7 +40,7 @@ int main(int argc, char* argv[]) {
         {"C3/Q", "C5/Q0"}
     };
     */
-    //writeOutput(outputFilename, param._FFInstance,  param.mappings);
+    writeOutput(outputFilename, param.FFresult,  param.mappings);
 
     return 0;
 };

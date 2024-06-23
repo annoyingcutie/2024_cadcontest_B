@@ -3,12 +3,20 @@
 
 #include "def.h"
 #include "FF.h"
+#include "MS.h"
+#include "banking.h"
 
 class Param{
 
 public:
+    Param()
+    {
+        SqrEpsilon = Epsilon * Epsilon;
+        SqrMaxDisp = MaxDisp * MaxDisp;
+        SqrMaxBandwidth = MaxBandwidth * MaxBandwidth;
+    }
 
-     void add_FF_List(const std::string& name, FF& flipFlop) {
+    void add_FF_List(const std::string& name, FF& flipFlop) {
         int l = _FF_list.size();
         _FF_list_map[name] = l ;
         flipFlop.set_type_id(l);
@@ -27,6 +35,9 @@ public:
     {
         return _FF_list[Id];
     }
+    int getFFListSize()const  {return (int)_FF_list.size(); }
+    std::vector<FF> getFFList() {return _FF_list;}
+
     void addGate(const std::string& name, Gate& gate) {
         int l = _Gate_list.size();
        _Gate_list_map[name] = l ;
@@ -59,6 +70,8 @@ public:
         _FF_Inst_map[s] = flipflop.get_FF_id();
         _FFInstance.push_back(flipflop);
     }
+    FF& get_inst_FF(int id) {return _FFInstance[id];}
+    int getFFSize()const  {return (int)_FFInstance.size(); }
 
     void addGateInstance(Gate& g) {
         int l = _gateInstance.size();
@@ -77,6 +90,9 @@ public:
 
     void setParameter(const std::string& key, double value) {
         _costParameters[key] = value;
+    }
+    double getParameter(const std::string& key){
+        return _costParameters[key];
     }
     /*
     void setParameter(const std::string& key, double value) {
@@ -125,16 +141,70 @@ public:
             int temp_FF_tid = _FFInstance[i].get_FF_type_id(); //Get type ID
             
             FF temp_F = _FF_list[temp_FF_tid];
-            double p = temp_F.get_power();
-            double Q = temp_F.get_Qpin();
+            double p = temp_F.get_Power();
+            double Q = temp_F.get_QpinDelay();
             _FFInstance[i].set_Power(p);
             _FFInstance[i].set_QpinDelay(Q);
             
         }
     }
+    void printFFs()
+    {
+        for (int i = 0; i < _FFInstance.size(); i ++)
+        {
+            _FFInstance[i].print();
+        }
+    }
 
-    std::vector<FF> _FFInstance;
+    static Param& getInstance()
+    {
+        static Param p;
+        return p;
+    }
+    void set_clock_source(std::string inst_name, std::string source)
+    {
+        //int d = _FF_Inst_map[inst_name];
+        FF& ff = get_inst_FF(_FF_Inst_map[inst_name]);
+        ff.setClock(source);
+       // _FFInstance[d] = ff;
+
+    }
+    
+
+    void addFFresult(FF& ff){
+        FFresult.push_back(ff);
+    }
+
+    void doMeanShift()
+    {
+        MS ms;
+        ms.run();
+    }
+
+    void doBanking()
+    {
+        FFBanking ffb;
+        ffb.run();
+    }
+
+    //some parameters
+    int M = 4;
+    int K  = 14;
+    int MaxClusterSize = 80;
+    int ThreadNum = 8;
+    double Tol = 0.0001;
+    double Epsilon = 5000;
+    double SqrEpsilon;
+    double MaxDisp = 3e+5;
+    double SqrMaxDisp;
+    double MaxBandwidth = 1e+5;
+    double SqrMaxBandwidth;
+    int searchRange = 2000;
+
     std::map<std::string, std::string> mappings;
+    std::vector<FF> FFresult;
+    std::unordered_map<int,std::string> useList_map_type;
+    
 private:
     
     std::unordered_map<std::string, double> _costParameters;
@@ -146,6 +216,8 @@ private:
     std::unordered_map<std::string, int> _FF_list_map;
     std::vector<FF> _FF_list;
 
+    
+
     std::unordered_map<std::string, int> _FF_Inst_map;
 
     std::unordered_map<std::string, int> _Gate_list_map;
@@ -156,8 +228,15 @@ private:
 
     std::vector<placementRows> p_row;
     std::vector<Net> nets;
-    
+
+    std::vector<FF> _FFInstance;
+    //std::vector<FF> FFresult;
+    //std::map<std::string, std::string> mappings;
+    //instance_name/pin  instance_name/pin
+    //calculate timing slack before& after
+    //area, power
 };
 
+inline Param& getParam(){return Param::getInstance();}
 #endif
 
