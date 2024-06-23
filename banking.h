@@ -41,6 +41,9 @@ private:
     int bitsLCM = 4;
     double totalCost;
 
+    double totalArea = 0;
+    double totalPower = 0;
+
 
     double calPACost(FF ff);
     
