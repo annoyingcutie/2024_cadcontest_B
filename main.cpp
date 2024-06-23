@@ -14,7 +14,7 @@ int main(int argc, char* argv[]) {
 
     std::cout<<"Meanshifting..."<<std::endl;
     param.doMeanShift();
-    param.printFFs();
+    // param.printFFs();
     std::cout<<"Finish Meanshifting..."<<std::endl;
 
     param.doBanking();
