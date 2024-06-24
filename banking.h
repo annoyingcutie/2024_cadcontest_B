@@ -39,13 +39,12 @@ private:
     //std::vector<std::vector<int>> dp(useList.size() + 1, std::vector<int>(bitsLCM + 1, INT_MAX));
     std::vector<std::vector<int>> dp;
     int bitsLCM = 4;
-    double totalCost;
-
+    double totalCost = 0;
     double totalArea = 0;
     double totalPower = 0;
 
 
-    double calPACost(FF ff);
+    void calPACost(FF ff);
     
 };
 
