@@ -44,7 +44,7 @@ private:
     double totalPower = 0;
 
 
-    void calPACost(FF ff);
+    double calPACost(FF ff);
     
 };
 

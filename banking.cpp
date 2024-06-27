@@ -303,18 +303,47 @@ void FFBanking::banking(){
 
 void FFBanking::calTotalCost(){
     auto& c = getParam();
+    int one = 0;
+    int two = 0;
+    int four = 0;
     for (int i=0; i<c.FFresult.size(); i++){
         calPACost(c.FFresult[i]);
+        if(c.FFresult[i].getBits() == 1)
+        {
+            one++;
+        }
+        else if(c.FFresult[i].getBits() == 2)
+        {
+            two++;
+        }
+        else if(c.FFresult[i].getBits() == 4)
+        {
+            four++;
+        }
     }
     std::cout << "The final total area of flip-flops in the circuit is " << totalArea << "." << std::endl;
     std::cout << "The final total power of flip-flops in the circuit is " << totalPower << "." << std::endl;
 
     std::cout << "The final total cost of flip-flops in the circuit is " << totalCost << "." << std::endl;
+    std::cout << "There are " << one << " 1-bit" << std::endl;
+    std::cout << "There are " << two << " 2-bit" << std::endl;
+    std::cout << "There are " << four << " 4-bit" << std::endl;
+
+    //original cost
+    std::cout << "The original total area of flip-flops in the circuit is " << c.orig_area << "." << std::endl;
+    std::cout << "The original total power of flip-flops in the circuit is " <<c.orig_power<< "." << std::endl;
+
+    std::cout << "The original total cost of flip-flops in the circuit is " << c.orig_totalcost << "." << std::endl;
+    std::cout << "There are " << c._FFInstance.size() << " 1-bit" << std::endl;
+   
+
+
+    
 }
 
 
 
-void FFBanking::calPACost(FF& ff){
+double FFBanking::calPACost(FF ff){
     auto& c = getParam();
     double area = ff.getW() * ff.getH();
     double power = ff.get_Power();
@@ -322,7 +351,7 @@ void FFBanking::calPACost(FF& ff){
     totalCost += cost;
     totalArea += area;
     totalPower += power;
+
+    return cost;
 }
-
-
 

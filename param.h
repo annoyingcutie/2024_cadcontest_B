@@ -145,6 +145,14 @@ public:
             double Q = temp_F.get_QpinDelay();
             _FFInstance[i].set_Power(p);
             _FFInstance[i].set_QpinDelay(Q);
+
+
+            orig_power+=p;
+            orig_totalcost+= _costParameters["Beta"]* p + _costParameters["Gamma"]* temp_F.getW()*temp_F.getH();
+            //std::cout<< "p is "<<p<<std::endl;
+           
+            
+            orig_area+= temp_F.getW()*temp_F.getH();
             
         }
     }
@@ -204,6 +212,11 @@ public:
     std::map<std::string, std::string> mappings;
     std::vector<FF> FFresult;
     std::unordered_map<int,std::string> useList_map_type;
+    std::vector<FF> _FFInstance;
+
+    double orig_area = 0;
+    double orig_power = 0;
+    double orig_totalcost = 0;
     
 private:
     
@@ -229,7 +242,7 @@ private:
     std::vector<placementRows> p_row;
     std::vector<Net> nets;
 
-    std::vector<FF> _FFInstance;
+    //std::vector<FF> _FFInstance;
     //std::vector<FF> FFresult;
     //std::map<std::string, std::string> mappings;
     //instance_name/pin  instance_name/pin
