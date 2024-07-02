@@ -159,7 +159,7 @@ void FFBanking::buildTable(){
     for (int i=0; i<useList.size(); i++) costs.push_back(calPACost(useList[i]));
     std::cout << "Finish initializing the costs table " << std::endl;
 
-    std::vector<std::vector<std::unordered_map<int, int>>> FF_COUNT(bits.size() + 1, std::vector<std::unordered_map<int, int>>(bitsLCM + 1));
+    std::vector<std::vector<std::std::unordered_map<int, int>>> FF_COUNT(bits.size() + 1, std::vector<std::unordered_map<int, int>>(bitsLCM + 1));
     FF_count = FF_COUNT;
     std::cout << "Finish initializing the FF_count table " << std::endl;
 
@@ -247,12 +247,11 @@ void FFBanking::banking(){
         index = bitsLCM;
         FF_total_count.clear();
         while(totalBits != 0){
-            
             quotient = totalBits / index;
             totalBits = totalBits % index;
             for (int j=0; j<useList.size(); j++){
                 FF_total_count[useList[j].get_FF_type_id()] += FF_count[useList.size()][index][useList[j].get_FF_type_id()] *quotient;
-            }
+            } // Finish accumulating all kinds of ff in the cluster
             index--;
         }
         std::cout<<"FF_total_count "<<FF_total_count.size()<<std::endl;
@@ -275,12 +274,11 @@ void FFBanking::banking(){
                 ff.set_Iname("Z"+std::to_string(nameCount));
                 ff.setCoor(x,y);
                 c.addFFresult(ff);
-                std::cout<< "add FF" <<std::endl;
-                count_index++;
-                
+                count_index ++;
                 int pinCount = 0;
                 std::string add;
             
+                string add;
                 for (int l=0; l<useList[j].getBits(); l++){
                    if (useList[j].getBits() > 1) add = std::to_string(pinCount);
                     else add.clear();
