@@ -18,37 +18,37 @@ void readFile(const std::string& filename, Param& param) {
         if (keyword == "Alpha" || keyword == "Beta" || keyword == "Gamma" || keyword == "Lambda" ||
             keyword == "BinWidth" || keyword == "BinHeight" || keyword == "BinMaxUtil" ||
             keyword == "DisplacementDelay") {
-             std::cout<<keyword<<std::endl;
+            //  std::cout<<keyword<<std::endl;
             double value;
             iss >> value;
             param.setParameter(keyword, value);
         } else if (keyword == "DieSize") {
-             std::cout<<keyword<<std::endl;
+            //  std::cout<<keyword<<std::endl;
             double x, y, width, height;
             iss >> x >> y >> width >> height;
             param.setDieSize(x, y, width, height);
         } else if (keyword == "NumInput") {
-             std::cout<<keyword<<std::endl;
+            //  std::cout<<keyword<<std::endl;
             int numInputs;
             iss >> numInputs;
         } else if (keyword == "Input") {
-            std::cout<<keyword<<std::endl;
+            // std::cout<<keyword<<std::endl;
             std::string name;
             double x, y;
             iss >> name >> x >> y;
             param.addInput(Pin(name, x, y));
         } else if (keyword == "NumOutput") {
-             std::cout<<keyword<<std::endl;
+            //  std::cout<<keyword<<std::endl;
             int numOutputs;
             iss >> numOutputs;
         } else if (keyword == "Output") {
-            std::cout<<keyword<<std::endl;
+            // std::cout<<keyword<<std::endl;
             std::string name;
             double x, y;
             iss >> name >> x >> y;
             param.addOutput(Pin(name, x, y));
         } else if (keyword == "FlipFlop") {
-            std::cout<<keyword<<std::endl;
+            // std::cout<<keyword<<std::endl;
             int id;
             std::string name;
             double x, y;
@@ -67,7 +67,7 @@ void readFile(const std::string& filename, Param& param) {
             }
             param.add_FF_List(name, FlipFlop);
         } else if (keyword == "Gate") {
-            std::cout<<keyword<<std::endl;
+            // std::cout<<keyword<<std::endl;
             std::string name;
             double x, y;
             int numPins;
@@ -83,7 +83,7 @@ void readFile(const std::string& filename, Param& param) {
             }
             param.addGate(name,g);
         } else if (keyword == "Inst") {
-            std::cout<<keyword<<std::endl;
+            // std::cout<<keyword<<std::endl;
             std::string name, type;
         
             double x, y;
@@ -109,7 +109,7 @@ void readFile(const std::string& filename, Param& param) {
              }
            
         } else if (keyword == "Net") {
-            std::cout<<keyword<<std::endl;
+            // std::cout<<keyword<<std::endl;
             std::string name;
             int numPins;
             iss >> name >> numPins;
@@ -164,25 +164,25 @@ void readFile(const std::string& filename, Param& param) {
            
 
         } else if (keyword == "QpinDelay"){
-            std::cout<<keyword<<std::endl;
+            // std::cout<<keyword<<std::endl;
             std::string name;
             double value;
             iss >> name >> value;
             param.setQpinDelay(name, value);
         } else if (keyword == "TimingSlack"){
-            std::cout<<keyword<<std::endl;
+            // std::cout<<keyword<<std::endl;
             std::string name, pin;
             double value;
             iss >> name >> pin >>value;
             param.setTimingSlack(name, value);
         } else if (keyword == "GatePower"){
-            std::cout<<keyword<<std::endl;
+            // std::cout<<keyword<<std::endl;
             std::string name;
             double value;
             iss >> name >> value;
             param.setGatePowers(name, value);
         } else if (keyword == "PlacementRows"){
-            std::cout<<keyword<<std::endl;
+            // std::cout<<keyword<<std::endl;
             int number;
             double x1, y1, x2, y2;
             iss >> x1 >> y1 >> x2 >> y2 >> number;
@@ -196,12 +196,9 @@ void readFile(const std::string& filename, Param& param) {
        
 
     }
-    std::cout<<"updating..."<<std::endl;
+    // std::cout<<"updating..."<<std::endl;
     param.update_q_s();
-    std::cout<<"Meanshifting..."<<std::endl;
-    param.doMeanShift();
-    param.printFFs();
-    std::cout<<"Finish Meanshifting..."<<std::endl;
+    
 
     inFile.close();
 
@@ -209,8 +206,8 @@ void readFile(const std::string& filename, Param& param) {
 
 }
 
-/*
-void writeOutput(const std::string& filename, const std::vector<FF>& _FFs, const std::map<std::string, std::string>& mappings) {
+
+void writeOutput(const std::string& filename, std::vector<FF>& _FFs, std::map<std::string, std::string>& mappings) {
     std::ofstream outFile(filename);
 
     if (!outFile) {
@@ -219,8 +216,8 @@ void writeOutput(const std::string& filename, const std::vector<FF>& _FFs, const
     }
 
     outFile << "CellInst " << _FFs.size() << "\n";
-    for (const auto& instance : _FFs) {
-        outFile << "Inst " << instance.get_Inst_name() << " " << instance.get_type_name() << " " << instance.get_x_coor() << " " << instance.get_y_coor() << "\n";
+    for ( auto& instance : _FFs) {
+        outFile << "Inst " << instance.get_Inst_name() << " " << instance.get_type_name() << " " << instance.getX() << " " << instance.getY() << "\n";
     }
 
     for (const auto& mapping : mappings) {
@@ -231,5 +228,5 @@ void writeOutput(const std::string& filename, const std::vector<FF>& _FFs, const
 
     outFile.close();
 }
-*/
+
 

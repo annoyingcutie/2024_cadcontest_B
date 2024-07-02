@@ -4,6 +4,7 @@
 #include "def.h"
 #include "FF.h"
 #include "MS.h"
+#include "banking.h"
 
 class Param{
 
@@ -15,7 +16,7 @@ public:
         SqrMaxBandwidth = MaxBandwidth * MaxBandwidth;
     }
 
-     void add_FF_List(const std::string& name, FF& flipFlop) {
+    void add_FF_List(const std::string& name, FF& flipFlop) {
         int l = _FF_list.size();
         _FF_list_map[name] = l ;
         flipFlop.set_type_id(l);
@@ -34,6 +35,9 @@ public:
     {
         return _FF_list[Id];
     }
+    int getFFListSize()const  {return (int)_FF_list.size(); }
+    std::vector<FF> getFFList() {return _FF_list;}
+
     void addGate(const std::string& name, Gate& gate) {
         int l = _Gate_list.size();
        _Gate_list_map[name] = l ;
@@ -87,6 +91,9 @@ public:
     void setParameter(const std::string& key, double value) {
         _costParameters[key] = value;
     }
+    double getParameter(const std::string& key){
+        return _costParameters[key];
+    }
     /*
     void setParameter(const std::string& key, double value) {
         parameters[key] = value;
@@ -138,6 +145,14 @@ public:
             double Q = temp_F.get_QpinDelay();
             _FFInstance[i].set_Power(p);
             _FFInstance[i].set_QpinDelay(Q);
+
+
+            orig_power+=p;
+            orig_totalcost+= _costParameters["Beta"]* p + _costParameters["Gamma"]* temp_F.getW()*temp_F.getH();
+            //std::cout<< "p is "<<p<<std::endl;
+           
+            
+            orig_area+= temp_F.getW()*temp_F.getH();
             
         }
     }
@@ -164,10 +179,20 @@ public:
     }
     
 
+    void addFFresult(FF& ff){
+        FFresult.push_back(ff);
+    }
+
     void doMeanShift()
     {
         MS ms;
         ms.run();
+    }
+
+    void doBanking()
+    {
+        FFBanking ffb;
+        ffb.run();
     }
 
     //some parameters
@@ -182,8 +207,16 @@ public:
     double SqrMaxDisp;
     double MaxBandwidth = 1e+5;
     double SqrMaxBandwidth;
+    int searchRange = 2000;
 
+    std::map<std::string, std::string> mappings;
+    std::vector<FF> FFresult;
+    std::unordered_map<int,std::string> useList_map_type;
+    std::vector<FF> _FFInstance;
 
+    double orig_area = 0;
+    double orig_power = 0;
+    double orig_totalcost = 0;
     
 private:
     
@@ -193,8 +226,10 @@ private:
     std::vector<Pin> inputs;
     std::vector<Pin> outputs;
     int _FF_List_num = 0;
-    std::unordered_map<std::string, int> _FF_list_map; 
+    std::unordered_map<std::string, int> _FF_list_map;
     std::vector<FF> _FF_list;
+
+    
 
     std::unordered_map<std::string, int> _FF_Inst_map;
 
@@ -207,8 +242,9 @@ private:
     std::vector<placementRows> p_row;
     std::vector<Net> nets;
 
-    std::vector<FF> _FFInstance;
-    std::map<std::string, std::string> mappings;
+    //std::vector<FF> _FFInstance;
+    //std::vector<FF> FFresult;
+    //std::map<std::string, std::string> mappings;
     //instance_name/pin  instance_name/pin
     //calculate timing slack before& after
     //area, power

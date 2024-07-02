@@ -5,6 +5,7 @@
 void FF::print()
 {
       std::cout << std::setw(10) << std::left << Instance_name
+              << std::setw(10) << std::left << _bits
               << std::setw(10) << std::right << _Coor.first
               << std::setw(10) << std::right << _Coor.second
               << std::setw(10) << std::right << _QpinDelay

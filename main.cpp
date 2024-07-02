@@ -12,6 +12,13 @@ int main(int argc, char* argv[]) {
     readFile(inputFilename, param);
     std::cout<<"finish Reading"<<std::endl;
 
+    std::cout<<"Meanshifting..."<<std::endl;
+    param.doMeanShift();
+    // param.printFFs();
+    std::cout<<"Finish Meanshifting..."<<std::endl;
+
+    param.doBanking();
+
    
 
 
@@ -33,7 +40,7 @@ int main(int argc, char* argv[]) {
         {"C3/Q", "C5/Q0"}
     };
     */
-    //writeOutput(outputFilename, param._FFInstance,  param.mappings);
+    writeOutput(outputFilename, param.FFresult,  param.mappings);
 
     return 0;
 };
