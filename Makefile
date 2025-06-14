@@ -14,7 +14,9 @@ SRCS = main.cpp read.cpp def.cpp FF.cpp MS.cpp param.cpp banking.cpp
 OBJS = $(SRCS:.cpp=.o)
 
 # Header files
+
 HEADERS = read.h def.h FF.h  MS.h param.h banking.h
+
 
 # Default rule
 all: $(TARGET)

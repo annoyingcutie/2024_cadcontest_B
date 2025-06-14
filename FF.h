@@ -77,7 +77,8 @@ public:
     void sortNeighbors  ();
     void setBandWidth   ();
 
-    //void setClock();
+    void setClock(std::string source) {_clock = source;}
+    std::string get_CLK() {return _clock;}
     //void setPin();
 
     double  doShifting (); //return eDist
@@ -102,7 +103,7 @@ private:
 
     std::vector<NeighborFF> _neighbors;
 
-    std::string clock; 
+    std::string _clock = "empty"; 
 
     
 
